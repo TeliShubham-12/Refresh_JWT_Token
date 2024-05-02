@@ -1,30 +1,67 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Api.Entities;
-using Api.Repositories;
-using Api.Repositories.Interfaces;
-using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using WebApi.Helpers;
+using WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+var services = builder.Services;
 
-builder.Services.AddControllers();
+services.AddCors();
+services.AddControllers();
+services
+    .AddOptions<AppSettings>()
+    .BindConfiguration("AppSettings")
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
 
-builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+services.AddDbContext<DataContext>(
+    options =>
+        options
+            .UseMySQL(
+                builder.Configuration.GetConnectionString("DefaultConnection")
+                    ?? throw new ArgumentNullException("DefaultConnection")
+            )
+            .LogTo(Console.WriteLine, LogLevel.Information)
+);
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services
+    .AddAuthentication(opt =>
+    {
+        opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidIssuer = "http://localhost:5235",
+            ValidAudience = "http://localhost:5235",
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.Zero,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(
+                    builder.Configuration["AppSettings:Secret"]
+                        ?? throw new ArgumentNullException("Secret")
+                )
+            )
+        };
+    });
+
+services.AddScoped<IJwtUtils, JwtUtils>();
+services.AddScoped<IUserService, UserService>();
+
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -33,6 +70,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors(
+    x => x.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+);
+app.UseMiddleware<ErrorHandlerMiddleware>();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

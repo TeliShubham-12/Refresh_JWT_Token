@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "k7P/K4NmOt364ywNlg6ifbe+TC7c3cVOdWgmapOgqaM=",
+  "Source": "jwt-refresh-token",
+  "BasePath": "_content/jwt-refresh-token",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
