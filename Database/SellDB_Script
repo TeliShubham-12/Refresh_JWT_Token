@@ -1,0 +1,42 @@
+-- Table for storing products
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY,
+    ProductName VARCHAR(255) NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    QuantityInStock INT NOT NULL
+);
+
+-- Table for storing customers
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    CustomerName VARCHAR(255) NOT NULL,
+    ContactNumber VARCHAR(15),
+    Email VARCHAR(255)
+);
+
+-- Table for storing purchases
+CREATE TABLE Purchases (
+    PurchaseID INT PRIMARY KEY,
+    ProductID INT,
+    CustomerID INT,
+    PurchaseDate DATE,
+    Quantity INT,
+    TotalAmount DECIMAL(10, 2)
+   -- FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
+   -- FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+-- Table for storing sales
+CREATE TABLE Sales (
+    SaleID INT PRIMARY KEY,
+    ProductID INT,
+    CustomerID INT,
+    SaleDate DATE,
+    Quantity INT,
+    TotalAmount DECIMAL(10, 2),
+	PaymentStatus nvarchar(50)
+   -- FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
+   -- FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+
