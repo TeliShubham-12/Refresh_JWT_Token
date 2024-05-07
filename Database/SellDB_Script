@@ -16,27 +16,43 @@ CREATE TABLE Customers (
 
 -- Table for storing purchases
 CREATE TABLE Purchases (
-    PurchaseID INT PRIMARY KEY,
-    ProductID INT,
+    PurchaseID INT PRIMARY KEY,  
     CustomerID INT,
-    PurchaseDate DATE,
+    SaleDate DATE,  
+    TotalAmount DECIMAL(10, 2),
+    PaymentMode VARCHAR(50),
+    PaymentStatus NVARCHAR(50)
+   
+);
+
+CREATE TABLE PurchaseItems (
+    PurchaseItemID INT PRIMARY KEY,
+    PurchaseID INT,
+    ProductID INT,
     Quantity INT,
-    TotalAmount DECIMAL(10, 2)
-   -- FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
-   -- FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+    Amount DECIMAL(10, 2),
+    
 );
 
 -- Table for storing sales
+
 CREATE TABLE Sales (
     SaleID INT PRIMARY KEY,
-    ProductID INT,
     CustomerID INT,
     SaleDate DATE,
-    Quantity INT,
-    TotalAmount DECIMAL(10, 2),
-	PaymentStatus nvarchar(50)
-   -- FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
-   -- FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+    GrossAmount DECIMAL(10, 2),
+    Discount DECIMAL(10, 2),
+    NetAmount DECIMAL(10, 2),
+    PaymentMode VARCHAR(50),
+    PaymentStatus NVARCHAR(50)
 );
 
+CREATE TABLE SaleItems (
+    SaleItemID INT PRIMARY KEY,
+    SaleID INT,
+    ProductID INT,
+    Quantity INT,
+    Amount DECIMAL(10, 2),
+   
+);
 
