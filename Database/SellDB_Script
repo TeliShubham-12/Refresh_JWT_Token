@@ -5,7 +5,6 @@ CREATE TABLE Products (
     Price DECIMAL(10, 2) NOT NULL,
     QuantityInStock INT NOT NULL
 );
-
 -- Table for storing customers
 CREATE TABLE Customers (
     CustomerID INT PRIMARY KEY,
@@ -13,7 +12,6 @@ CREATE TABLE Customers (
     ContactNumber VARCHAR(15),
     Email VARCHAR(255)
 );
-
 -- Table for storing purchases
 CREATE TABLE Purchases (
     PurchaseID INT PRIMARY KEY,  
@@ -21,10 +19,8 @@ CREATE TABLE Purchases (
     SaleDate DATE,  
     TotalAmount DECIMAL(10, 2),
     PaymentMode VARCHAR(50),
-    PaymentStatus NVARCHAR(50)
-   
+    PaymentStatus NVARCHAR(50)  
 );
-
 CREATE TABLE PurchaseItems (
     PurchaseItemID INT PRIMARY KEY,
     PurchaseID INT,
@@ -33,7 +29,6 @@ CREATE TABLE PurchaseItems (
     Amount DECIMAL(10, 2),
     
 );
-
 -- Table for storing sales
 
 CREATE TABLE Sales (
@@ -46,13 +41,11 @@ CREATE TABLE Sales (
     PaymentMode VARCHAR(50),
     PaymentStatus NVARCHAR(50)
 );
-
 CREATE TABLE SaleItems (
     SaleItemID INT PRIMARY KEY,
     SaleID INT,
     ProductID INT,
     Quantity INT,
-    Amount DECIMAL(10, 2),
-   
+    Amount DECIMAL(10, 2), 
 );
 
