@@ -41,6 +41,7 @@ CREATE TABLE Sales (
     PaymentMode VARCHAR(50),
     PaymentStatus NVARCHAR(50)
 );
+
 CREATE TABLE SaleItems (
     SaleItemID INT PRIMARY KEY,
     SaleID INT,
